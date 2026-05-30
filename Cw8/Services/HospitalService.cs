@@ -123,4 +123,29 @@ public class HospitalService : IHospitalService
         
         return list;
     }
+
+
+    public bool AssignBed(string id, AssignBedDTO assignBedDto)
+    {
+        if(assignBedDto == null) return false;
+        var bed = context.Beds.Where(b => b.BedType.Name == assignBedDto.BedType && 
+                                          b.Room.Ward.Name == assignBedDto.Ward &&
+                                          !context.BedAssignments.Any(a =>
+                                              a.BedId == b.Id &&
+                                              a.From < assignBedDto.To && (a.To == null || a.To > assignBedDto.From ))
+                                          ).FirstOrDefault();
+        if(bed == null) return false;
+
+        context.BedAssignments.Add(new BedAssignment()
+        {
+            PatientPesel = id,
+            BedId = bed.Id,
+            From = assignBedDto.From,
+            To = assignBedDto.To
+        });
+        
+        
+        context.SaveChanges();
+        return true;
+    }
 }
