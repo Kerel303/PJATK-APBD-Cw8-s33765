@@ -1,8 +1,8 @@
 ﻿namespace Cw8.Contracts;
 
-using Cw8.Models;
+using Cw8.DTOs;
 
 public interface IHospitalService
 {
-    public List<Patient> GetPatients(string? search);
+    public List<PatientDTO> GetPatients(string? search);
 }
